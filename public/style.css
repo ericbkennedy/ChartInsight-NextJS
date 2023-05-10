@@ -1,0 +1,435 @@
+
+body {
+    font-family: "SF Pro Text", Roboto, "Helvetica Neue", helvetica, arial, sans-serif;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    position: relative;
+    background-color: #f8f8f8;
+  }
+  a { color: #3B5998; }
+  
+  .companyHeader {
+    display:flex;
+    align-items:center;
+  }
+  
+  .companyHeader img {
+    max-width:80px; max-height: 40px; padding: 0 10px;
+  }
+  
+  text { font: 12px sans-serif; }
+  text a { fill: navy; }
+  text a:visited { fill:darkpurple; }
+  text a:hover, text a:active { text-decoration: underline; fill:#1a73e8; }
+  
+  .tinytext { font-size: 10px; }
+  
+  svg { display: block; width: auto;}
+  
+  svg.sparkline {
+      height: 100px;
+      font-size: 14px;
+      width: 280px;
+      margin: 0 0 40px 0;
+      padding: 0;
+  }
+  
+  svg.sparkline#priceHistory {
+      height: 250px;
+      width: 100%;
+      margin: 0;
+  }
+
+  svg.sparkline:hover {
+    cursor: crosshair;
+  }
+  
+  div.latest { text-align: right; }
+  
+  .pht { color: #ccc; text-align: center; }
+  
+  .fR { float: right; }
+  .fL { float: left; }
+  
+  #stockChartTitle {
+    padding-left: 50px;
+  }
+  
+  span.longTitle {
+    display: none;
+  }
+  
+  #changeScale {
+    display: none; /* only shown on larger devices */
+  }
+  
+  .orow { clear: both; padding: 10px 0 5px 0; height: 100px; border-top: 1px solid #cccccc; }
+  .ocell { float: left; width: 35%; text-align: right; white-space: nowrap; }
+  .usd { font-style: italic; width: 48%; }
+  
+  td { padding: 5px; vertical-align: top;}
+  
+  button { background: #1a73e8; color: #ffffff; font-size: medium; border: 1px; border-radius: 6px; cursor: pointer;
+    padding: 7px;
+    margin-left: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  }
+  .unfollow { background: #EEE; color: #333; }
+  
+  .black { color: #000000; }
+  .green { color: #336633; }
+  .gray { color: #CCCCCC; }
+  .red { color: #AA0000; }
+  
+  .rightText { text-align: right; white-space: nowrap; }
+  
+  .flashBox { padding: 10px; margin: 10px 0; }
+  
+  .success { background-color: #00FF00; border: 1px solid #00AA00}
+  
+  .info { background-color: #EEEEEE; border: 1px solid #CCCCCC}
+  
+  .error { background-color: #f5d0d0; border: 1px solid #AA0000}
+  
+  header {
+    border-bottom: 1px solid #CCC;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1); 
+    background-color: #f8f8f8; 
+    height: 40px;
+    padding: 10px 10px 0 10px;
+    margin: 0; 
+  }
+  
+  header section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  header input {
+    border: 1px solid #555555;
+    display: block;
+    padding: 0;
+    background: #FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 13px center;
+    background-position: bottom 5px right 5px;
+  }
+  
+  .crumb {
+    font-size: 11px;
+    padding: 10px 0 0 10px;
+  }
+  
+  input[type=text] { width: 300px; }
+  textarea { width: 300px; height: 300px; }
+  
+  .footer {
+    font-size: 0.9em;
+    border-top: 1px solid #CCC;
+    background-color: #EEE;
+    height: 80px;
+    padding: 15px 5px 15px 5px;
+    margin: 0;
+  }
+  
+  .logo { float: left; font-size: 16pt; font-family: 'Optima', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; }
+  a.nU { text-decoration: none; }
+  
+  main {
+    width: 100%;
+    max-width: 1280px;
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 0 10px; /* main is used on pages without full-width charts to add horizontal padding */
+  }
+  
+  section {
+    width: 100%;
+    max-width: 1280px;
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  .hpad {
+    padding: 0 10px;
+  }
+  
+  .hpad p {
+    color: #333333;
+  }
+  
+  .startHidden {
+    display: none;
+  }
+  
+  .fw {
+    background-color: #ffffff;
+    padding: 10px 0;
+  }
+  
+  .orow .imgPreview { display: none; }
+  
+  .orow a:hover + .imgPreview {
+    display: block;
+    position: absolute;
+    /* leave top unspecified so browser displays it below link */
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    background-color: #FFFFFF;
+    padding: 5px #FFF;
+    margin-top: 30px;
+    height: 278px;
+    width: 310px;
+  }
+  
+  .col {
+      width: 300px; /* required for images but not sparklines */
+    min-height: 210px;
+    padding: 0 10px;
+    background-color: #ffffff;
+  }
+  
+  .col:first-child { margin-left: 0; }
+  
+  .col img { margin: 10px 0 25px 0;}
+  
+  h3 { margin: 5px 0; }
+  
+  #autocomplete {
+    position: absolute;
+    left: 25%; /* avoids logo while supporting absolute positioning for search results */
+  }
+  
+  #searchBar {
+    padding:5px;
+    width: 180px;
+    border-radius: 6px;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+  
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-radius:3px;
+    border-top: none;
+    background-color: #fff;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: #1a73e8;
+    color: #ffffff;
+  }
+  
+  .companyActions {
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .external { border: none; margin: 22px 15px 0 0;}
+  
+  .dropdown.active > .link,
+  .link:hover {
+    color: black;
+  }
+  
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    left: -55px;
+    min-width: 143px; 
+    top: calc(100% + .25rem);
+    background-color: white;
+    padding: .75rem;
+    border-radius: .25rem;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  }
+  
+  .dropdown.active > .external + .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  
+  .dropdown-links {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  
+  .tabs {
+    display: flex;
+    margin-top: 10px;
+    border-bottom: 1px solid #D7DBDD; 
+  }
+  
+  .tab {
+    cursor: pointer;
+    padding: 5px 20px;
+    color: #3B5998;
+    font-size: 13px;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .tab.active {
+    color: #000000;
+    border-bottom-color: #000000;
+  }
+  
+  #tabbedContent {
+    width: 100%;
+    padding-top: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background-color: #FFFFFF;
+  }
+  
+  #tabbedContent .group {
+    width: 960px;
+    display: flex;
+  }
+  
+  #tabbedContent .groupFour {
+    width: 1280px;
+    display: flex;
+  }
+  
+  #tabbedContent h3 {
+    display: none;    /* only shown on larger screens */
+  }
+  
+  .sectorList span {
+    display: none;
+  }
+  
+  .sectorList {
+    font-size: 10pt;
+    margin: 5px 0 20px 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .sectorFooter, .sectorFooter div, .sectorFooter span {
+    padding: 3px 10px;
+  }
+  
+  .sectorList a, .sectorFooter a {
+    text-decoration: none;
+  }
+  
+  @media screen and (max-width: 320px) { /* small phones like iPhone SE */
+    #autocomplete {
+      left: 95px;
+    }
+  
+    header a {
+      font-size: 10pt;
+    }
+  }
+  
+  @media screen and (min-width: 321px) and (max-width: 500px) {
+    #autocomplete {
+      left: 135px;
+    }
+  }
+  
+  @media screen and (max-width: 500px) {
+    #stockChartTitle {
+      padding-left: 10px;
+    }
+  
+    input#searchBar {
+      width: 40px;
+      -webkit-transition: width 0.15s ease-in-out;
+      transition: width 0.15s ease-in-out;
+    }
+  
+    input#searchBar:focus {
+      width: 150px;
+    }
+  }
+  
+  @media screen and (min-width: 700px) {
+    /* only show the log and linear scale selectors on larger screens
+    * note ccl.js disables log option for negative values */
+    #changeScale {
+      display: block;
+      float: right;
+      padding-right: 20px; 
+    }
+  
+    span.longTitle {
+      display: inline;
+    }
+  
+    .tabs {
+      display: none;
+    }
+  
+    #tabbedContent h3 {
+      display: block;
+    }
+  
+    #searchBar {
+      width: 250px;
+    }
+  }
+  
+  
+  @media screen and (min-width: 1000px) {
+    /* allow extra space within 3 col group */
+    #tabbedContent .group {
+      min-width: 960px;
+      width: 100%;
+      max-width: 1200px;
+      justify-content: space-between;
+    }
+  }
+  
+  @media screen and (max-width: 1279px) {
+    /* only show rollover when sector name is hidden for smaller windows */
+    .sectorList a:hover span {
+      display: block;
+      position: absolute;
+      margin-left: -25px;
+    }
+  }
+  
+  @media screen and (min-width: 1280px) {
+    .sectorList span {
+      display: block;
+    }  
+  
+    #tabbedContent {
+      box-shadow: 0 1px 4px rgba(0,0,0,.1);
+      border-radius:6px;
+    }
+  
+    .fw {
+      box-shadow: 0 1px 4px rgba(0,0,0,.1);
+      border-radius:6px;
+    }
+  }
