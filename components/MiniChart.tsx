@@ -11,7 +11,7 @@ export default function MiniChart({stock, index}: {stock: any, index: number}) {
             <Link href={stock.uri} prefetch={false}>{stock.name}<br />
                 {stock.titles ? <i>{stock.titles}</i> : ''}
                 <img src={"https://chartinsight.com/files/mc/" + stock.ticker + ".png"} 
-                loading={index > 10 ? "lazy" : "eager" } 
+                loading={index > 5 ? "lazy" : "eager" } 
                 width="300" height="250" alt={stock.ticker + " stock chart compared to revenue"} />
             </Link>
         </div>
