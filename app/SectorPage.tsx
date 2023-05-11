@@ -4,10 +4,12 @@
  */
 
 import Link from 'next/link';
-import { getMySqlConnection} from '../models/db';
-import InsiderBuying from '../components/InsiderBuying';
-import MiniChart from '../components/MiniChart';
-import TabSelector from '../components/TabSelector';
+import { Suspense } from 'react';
+import { getMySqlConnection} from '@/models/db';
+import StreamedInsiderBuying from '@/components/StreamedInsiderBuying';
+import Loading from '@/components/Loading';
+import MiniChart from '@/components/MiniChart';
+import TabSelector from '@/components/TabSelector';
 
 export const sectors = {
     "Communication": "📡",
@@ -66,6 +68,11 @@ export async function SectorPage(sector: string) {
     }
     let [largestStocks] = await con.query(query + ' ORDER By marketCap DESC');
 
+    let sectorAPIValue = sector.length > 1 ? sector : 'All';
+    // Start insider data fetch to allow time for the slow query (if not cached) and
+    // pass returned Promise to StreamedInsiderBuying to show Suspense loading state quickly
+    let fetchInProgress = fetch(`http://localhost:3000/api/insiderBuying/${sectorAPIValue}`, 
+                                    { next: { revalidate: 60 } });  // revalidate cache interval in seconds
 
     return (
     <section>
@@ -95,7 +102,10 @@ export async function SectorPage(sector: string) {
                     )}
                 </div>
                 <div className="col"><h3>Companies With Insider Buying</h3>
-                    <InsiderBuying key='insiderBuying' sector={sector||'All'} />
+                    <Suspense fallback=<Loading />>
+                        {/* @ts-expect-error Async Server Component */}
+                        <StreamedInsiderBuying key='insiderBuying' sector={sectorAPIValue} fetchInProgress={fetchInProgress} />
+                    </Suspense>
                 </div>
                 <div className={sector.length > 0 ? 'startHidden' : 'col'}><h3>13F Ownership Filings</h3>
                     {investorLinks.map( (r: {uri: string, name: string, managers: string}, i: number) => 

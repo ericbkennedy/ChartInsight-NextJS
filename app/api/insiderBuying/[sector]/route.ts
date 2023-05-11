@@ -4,6 +4,8 @@
 import { NextResponse } from 'next/server';
 import { getMySqlConnection } from '@/models/db';
 
+const MIN_MARKET_CAP_HOME_PAGE = 10000000000; // Ten billion
+
 /**
  * revalidate should cause Next to cache the API response for an hour
  * but it appears to rerun the slow query so the result is cached in
@@ -21,7 +23,8 @@ export interface InsiderData {
     titles: string;
 }
 
-const recentInsiderBuying: Map<string, InsiderData[]> = new Map();
+// Map with sector keys has values that are Maps with ticker keys to prevent duplicate InsiderData
+const recentInsiderBuying: Map<string, Map<string, InsiderData>> = new Map();
 let cacheDate : Date = new Date(0);
 
 export async function GET(request: Request, route: { params: { sector: string }}) {
@@ -44,8 +47,8 @@ async function getInsiderBuyingBySector(sector: string): Promise<InsiderData[]> 
         await cacheInsiderBuying()
     }
     let insiderBuying = recentInsiderBuying.get(sector);
-    if (insiderBuying && insiderBuying.length > 0) {
-        return insiderBuying as InsiderData[];
+    if (insiderBuying && insiderBuying.size > 0) {
+        return Array.from(insiderBuying.values());
     } else {
         return [];
     }
@@ -58,6 +61,7 @@ async function cacheInsiderBuying() {
     recentInsiderBuying.clear();
     let con = await getMySqlConnection();
     let query = `SELECT S.shortName,
+                        S.id,
                         S.sector,
                         S.marketCap,
                         S.ticker,
@@ -71,11 +75,12 @@ async function cacheInsiderBuying() {
                     JOIN insider I on F.insiderCIK = I.CIK
                     WHERE openMarketPurchase = 1 and F.netChangeSharesDirect > 0 and hide = 0
                     AND DATEDIFF(NOW(), F.filingDate) < 30
-                    GROUP BY S.shortName, S.sector, S.marketCap, S.ticker, S.uri ORDER BY totalBuying desc limit 100`;
+                    GROUP BY S.shortName, S.id, S.sector, S.marketCap, S.ticker, S.uri ORDER BY totalBuying desc limit 100`;
 
     const [rows] = await con.query(query);
 
-    recentInsiderBuying.set('All', []);
+    let homepageSet: Map<string, InsiderData> = new Map();
+    recentInsiderBuying.set('All', homepageSet);
     let countOnHomepage = 0, maxOnHomepage = 14; // Limit insider listings on homepage to keep column heights similar
 
     rows.forEach((stock: any) => {
@@ -86,16 +91,17 @@ async function cacheInsiderBuying() {
                                     titles: stock.titles};
                         
         
-        if (stock.marketCap > 10000000000 && countOnHomepage < maxOnHomepage) {
+        if (stock.marketCap > MIN_MARKET_CAP_HOME_PAGE && countOnHomepage < maxOnHomepage) {
             countOnHomepage += 1;
-            recentInsiderBuying.get('All')?.push(buyers);
+            homepageSet.set(stock.ticker, buyers);
         }
 
-        if (!recentInsiderBuying.get(stock.sector)) {
-            recentInsiderBuying.set(stock.sector, [buyers]);
-        } else {
-            recentInsiderBuying.get(stock.sector)?.push(buyers);
+        let sectorSet : Map<string, InsiderData> | undefined = recentInsiderBuying.get(stock.sector);
+        if (!sectorSet) {
+            sectorSet = new Map();
+            recentInsiderBuying.set(stock.sector, sectorSet);
         }
+        sectorSet.set(stock.ticker, buyers);
     });
     cacheDate = new Date();
     console.log('Cached insider buying');
