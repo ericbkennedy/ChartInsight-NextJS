@@ -62,7 +62,7 @@ function HoldingEntry(entry: any, currencyFormatter: any, numberFormatter: any) 
         }
     }
 
-    return (<tr className="orow">
+    return (<tr className="orow" key={entry.id}>
                 {formatIssuerName(entry)}
                 <td> {shareCount} </td>
                 <td className={color}> {shareCountDiff} </td>
@@ -84,7 +84,7 @@ export default function OwnerHoldings({holdings}: { holdings: [{}?] }) {
         
         return (<table>
                     <tbody>
-                    <tr>
+                    <tr key='header'>
                         <th>Company</th>
                         <th colSpan={2}>Shares</th>
                         <td>&nbsp;</td>
@@ -92,7 +92,7 @@ export default function OwnerHoldings({holdings}: { holdings: [{}?] }) {
                         <th>$ Change</th>
                         <th>&nbsp;</th>
                     </tr>
-                    <tr>
+                    <tr key='subhead'>
                         <td>&nbsp;</td>
                         <td>Total</td>
                         <td>Change</td>
