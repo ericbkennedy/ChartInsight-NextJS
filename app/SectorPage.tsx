@@ -82,7 +82,7 @@ export async function SectorPage(sector: string) {
             <div className="sectorList">
                 <div>Sector:</div>
                 {Object.entries(sectorFilter).map(([key, value]) => (
-                    <div key={key}><Link href={'/' + key.replace(' ', '-')}>
+                    <div key={key}><Link href={'/' + key.replace(' ', '-')} prefetch={false}>
                         {String(value).length > 0 ? String(value) : ''}
                         <span>{key.replace('Consumer ', '')}</span></Link>
                     </div>
