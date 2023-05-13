@@ -10,6 +10,7 @@ let currentYear : number = new Date().getFullYear();
 export const metadata = {
     title: "Visual Fundamental Analysis - ChartInsight",
     description: "Quarterly revenue and earnings fluctuate like stock prices. Get the big picture with insights from company insiders and leading investors",
+    viewport: "width=device-width, initial-scale=1.0,  viewport-fit=cover, user-scalable=no",
 }
 
 export default function RootLayout({

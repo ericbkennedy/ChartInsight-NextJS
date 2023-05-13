@@ -5,7 +5,7 @@
 'use client';
  
 import { useRouter } from 'next/navigation';
-import { FormEvent, KeyboardEvent, useState} from 'react';
+import { FormEvent, KeyboardEvent, useEffect, useState} from 'react';
 
 interface NameURLEntry {
     n: string; 
@@ -29,16 +29,18 @@ export default function AjaxSearch() {
         router.push(uri);
     };
 
-    const handleChange = (e: FormEvent<HTMLInputElement>) => {        
+    const handleChange = (e: FormEvent<HTMLInputElement>) => {
         if (e.target) {
             let query = (e.target as HTMLInputElement).value;
             setInputText(query);
-            fetch(`/api/search/${query}`)
-                .then((res) => res.json())
-                .then((results) => {
-                    setSelectedIndex(0);
-                    setResults(results);
-                });
+            if (query.length >= 1) { 
+                fetch(`/api/search/${query}`)
+                    .then((res) => res.json())
+                    .then((results) => {
+                        setSelectedIndex(0);
+                        setResults(results);
+                    });
+            }
         }
     };
 
@@ -65,10 +67,24 @@ export default function AjaxSearch() {
     };
 
     const SearchResults = ({results} : {results: []|null}) => {
-    
+
         const handleClick = (uri: string) => {
             goToURI(uri);
         }
+
+        // focusout event bubbles to parent container when e.preventDefault() isn't called by mouseDown on autocomplete item
+        const focusOutHandler = () => {
+            clearResults();
+        }
+
+        useEffect(() => {
+            // Fired on component mount
+            document.addEventListener('focusout', focusOutHandler);
+
+            return () => {  // Returned a function React will call on component unmount
+                document.removeEventListener('focusout', focusOutHandler);
+            }
+        }, [])
     
         if (results == null) {
             return (<> </>);
@@ -78,7 +94,8 @@ export default function AjaxSearch() {
                     {results && results.map((r: NameURLEntry, index: number) => {
                         return <div key={r.u}
                                 className={ index == selectedIndex ? 'autocomplete-active' : 'inactive'}
-                                 onClick={() => handleClick(r.u)}>{r.n}</div>
+                                onMouseDown={ e => {e.preventDefault(); handleClick(r.u)}}>
+                                    {r.n}</div>
                     })}
                     </div>
                 </>);
@@ -91,7 +108,6 @@ export default function AjaxSearch() {
                     value={inputText} 
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    onBlur={clearResults}
                     maxLength={128}
                     name="q"
                     type="text"
