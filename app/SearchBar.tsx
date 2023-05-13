@@ -15,12 +15,17 @@ interface NameURLEntry {
 export default function AjaxSearch() {
 
     const [results, setResults] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState(0);
     const [inputText, setInputText] = useState('');
     const router = useRouter();
 
-    const goToURI = (uri: string) => {
+    const clearResults = () => {
         setInputText('');
         setResults(null);
+    };
+
+    const goToURI = (uri: string) => {
+        clearResults();
         router.push(uri);
     };
 
@@ -31,6 +36,7 @@ export default function AjaxSearch() {
             fetch(`/api/search/${query}`)
                 .then((res) => res.json())
                 .then((results) => {
+                    setSelectedIndex(0);
                     setResults(results);
                 });
         }
@@ -38,11 +44,22 @@ export default function AjaxSearch() {
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => { 
         if (results) {
-            if (Array.from(results).length > 0 && e.key == 'Enter') {
-                let firstResult : NameURLEntry = results[0];
-                if (firstResult.u) {
-                    goToURI(firstResult.u);
+            if (selectedIndex < Array.from(results).length && e.key == 'Enter') {
+                let selectedResult : NameURLEntry = results[selectedIndex];
+                if (selectedResult.u) {
+                    goToURI(selectedResult.u);
                 }
+            } else if (e.key == 'ArrowDown' && selectedIndex + 1 < Array.from(results).length) {
+                setSelectedIndex(selectedIndex + 1);
+
+            } else if (e.key == 'ArrowDown' && selectedIndex + 1 >= Array.from(results).length) {
+                setSelectedIndex(0); // wrap to start
+
+            } else if (e.key == 'ArrowUp' && selectedIndex == 0) {
+                setSelectedIndex(Array.from(results).length - 1); // wrap to end
+
+            } else if (e.key == 'ArrowUp' && selectedIndex > 0) {
+                setSelectedIndex(selectedIndex - 1); // wrap to end
             }
         }
     };
@@ -58,8 +75,10 @@ export default function AjaxSearch() {
         } else {
             return (<>
                     <div id="autocomplete-list" className="autocomplete-items">
-                    {results && results.map((r: NameURLEntry) => {
-                        return <div key={r.u} onClick={() => handleClick(r.u)}>{r.n}</div>
+                    {results && results.map((r: NameURLEntry, index: number) => {
+                        return <div key={r.u}
+                                className={ index == selectedIndex ? 'autocomplete-active' : 'inactive'}
+                                 onClick={() => handleClick(r.u)}>{r.n}</div>
                     })}
                     </div>
                 </>);
@@ -72,6 +91,7 @@ export default function AjaxSearch() {
                     value={inputText} 
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
+                    onBlur={clearResults}
                     maxLength={128}
                     name="q"
                     type="text"

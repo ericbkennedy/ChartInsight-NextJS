@@ -7,24 +7,31 @@ export interface URIEntry {
     combined: string;
 }
 
-let _con : any = null;
+var _pool : any = undefined;
 const _uriList: Map<string, URIEntry> = new Map();
 
-export async function getMySqlConnection(){
-    if(_con == null){
+/**
+ * Get a ConnectionPool to use for queries.
+ * @returns a Promise<Pool> which automatically releases connections when queries resolve
+ */
+export async function getMySqlConnection() {
+    if(_pool == undefined){
         let config: ConnectionOptions = {
             host: process.env.MYSQL_HOST,
             port: 3306,
             user: process.env.MYSQL_USER,
             password: process.env.MYSQL_PASSWORD,
-            database: process.env.MYSQL_DB
+            database: process.env.MYSQL_DB,
+            waitForConnections: true,
+            connectionLimit: 10,
+            maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
+            idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+            queueLimit: 0
         }
-        _con = await mysql.createConnection(config);
-        console.debug('DB Connection created');
-        return _con;
-    } else {
-        return _con;
+        _pool = mysql.createPool(config);
+        console.debug('DB Connection Pool created');
     }
+    return _pool;   // Pool will release connections automatically when queries finish
 }
 
 export async function getURIList() {
