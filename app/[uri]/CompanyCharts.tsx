@@ -82,7 +82,7 @@ export default function CompanyCharts({ stock, priceTimestamps }: { stock: any, 
 
     return (
         <section>
-            <div className="crumb"><Link href={sectorURI}>{stock.sector}</Link> &rsaquo; {subsector}</div>
+            <div className="crumb"><Link href={sectorURI} prefetch={false}>{stock.sector}</Link> &rsaquo; {subsector}</div>
             <div className="companyHeader">
                 <img src={`https://chartinsight.com/files/mlogo/${stock.ticker}.png`} 
                     alt={`${stock.ticker} correlated with revenue`}/>
