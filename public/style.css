@@ -194,6 +194,9 @@ body {
   
   .col img { margin: 10px 0 25px 0;}
   
+  .col a {text-decoration: none;}
+  .col a:hover { text-decoration: underline; fill:#1a73e8; }
+
   h3 { margin: 5px 0; }
   
   #autocomplete {

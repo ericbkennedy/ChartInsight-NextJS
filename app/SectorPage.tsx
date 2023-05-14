@@ -109,7 +109,7 @@ export async function SectorPage(sector: string) {
                 </div>
                 <div className={sector.length > 0 ? 'startHidden' : 'col'}><h3>13F Ownership Filings</h3>
                     {investorLinks.map( (r: {uri: string, name: string, managers: string}, i: number) => 
-                        <p key={i}><Link href={'/i/' + r.uri}>{r.name}</Link><br />{r.managers}</p>
+                        <p key={i}><Link href={'/i/' + r.uri} prefetch={false}>{r.name}</Link><br />{r.managers}</p>
                     )}
                 </div>
             </div>
