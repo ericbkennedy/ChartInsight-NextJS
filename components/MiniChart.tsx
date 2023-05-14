@@ -9,7 +9,7 @@ export default function MiniChart({stock, index}: {stock: any, index: number}) {
     return (
         <div key={stock.stockId}>
             <Link href={stock.uri} prefetch={false}>{stock.name}</Link><br />
-                {stock.titles ? <i>{stock.titles}</i> : ''}
+                {stock.titles && <i>{stock.titles}</i>}
             <Link href={stock.uri} prefetch={false}>
                 <img src={"https://chartinsight.com/files/mc/" + stock.ticker + ".png"} 
                 loading={index > 5 ? "lazy" : "eager" } 

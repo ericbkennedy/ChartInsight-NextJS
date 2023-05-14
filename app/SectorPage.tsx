@@ -31,7 +31,7 @@ export async function SectorPage(sector: string) {
     let sectorSQL = '';
     let title = ''
     let investorLinks = [];
-    let tabText = [`Recent ${sector} Filings`, `Largest Companies`, `Insider Buying`];
+    let tabText = [`Recent Filings`, `Largest Companies`, `Insider Buying`];
 
     if (sector.length > 1) {
         sectorFilter = {'': 'All', ...sectors};
@@ -81,10 +81,10 @@ export async function SectorPage(sector: string) {
             <p>Quarterly revenue and earnings fluctuate like stock prices. Get the big picture with insights from company insiders and leading investors.</p>
             <div className="sectorList">
                 <div>Sector:</div>
-                {Object.entries(sectorFilter).map(([key, value]) => (
-                    <div key={key}><Link href={'/' + key.replace(' ', '-')} prefetch={false}>
-                        {String(value).length > 0 ? String(value) : ''}
-                        <span>{key.replace('Consumer ', '')}</span></Link>
+                {Object.entries(sectorFilter).map(([sectorName, emoji]) => (
+                    <div key={sectorName}><Link href={'/' + sectorName.replace(' ', '-')} prefetch={false}>
+                        {String(emoji).length > 0 && String(emoji)}
+                        <span>{sectorName.replace('Consumer ', '')}</span></Link>
                     </div>
                 ))}
             </div>

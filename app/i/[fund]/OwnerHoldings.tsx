@@ -62,7 +62,7 @@ function HoldingEntry(entry: any, currencyFormatter: any, numberFormatter: any) 
         }
     }
 
-    return (<tr className="orow" key={entry.id}>
+    return (<tr className="orow" key={entry.CUSIP}>
                 {formatIssuerName(entry)}
                 <td> {shareCount} </td>
                 <td className={color}> {shareCountDiff} </td>
@@ -86,18 +86,12 @@ export default function OwnerHoldings({holdings}: { holdings: [{}?] }) {
                     <tbody>
                     <tr key='header'>
                         <th>Company</th>
-                        <th colSpan={2}>Shares</th>
-                        <td>&nbsp;</td>
+                        <th>Shares</th>
+                        <th>Sh. Change</th>
+                        <th>&nbsp;</th>
                         <th>Value</th>
                         <th>$ Change</th>
                         <th>&nbsp;</th>
-                    </tr>
-                    <tr key='subhead'>
-                        <td>&nbsp;</td>
-                        <td>Total</td>
-                        <td>Change</td>
-                        <td>%</td>
-                        <td>&nbsp;</td>
                     </tr>
                     {holdings.map(row => HoldingEntry(row, currencyFormatter, numberFormatter))}
                     </tbody>

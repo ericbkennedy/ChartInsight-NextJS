@@ -24,7 +24,7 @@ export default function RootLayout({
             <header>
                 <section>
                     <div className="logo">
-                    <Link href="/" className="nU"><span className="green" translate="no">ChartInsight</span></Link>
+                    <Link href="/" className="nU" prefetch={false}><span className="green" translate="no">ChartInsight</span></Link>
                     </div>
                 <SearchBar />
                 <div>
@@ -37,7 +37,9 @@ export default function RootLayout({
             <div className="footer">
                 <section>
                     <span className="fR">
-                        <Link href="/about">About</Link> &nbsp; <Link href="/about/privacy">Privacy</Link> &nbsp; <Link href="/about/terms">Terms</Link></span>&copy; <span translate="no">ChartInsight LLC</span> {currentYear} &nbsp; <p className="tinytext">All data provided without any warranty because SEC XML files are imported via an automated process. Check original SEC filings before making any investment decision. </p>
+                        <Link href="/about" prefetch={false}>About</Link> &nbsp; 
+                        <Link href="/about/privacy" prefetch={false}>Privacy</Link> &nbsp; 
+                        <Link href="/about/terms" prefetch={false}>Terms</Link></span>&copy; <span translate="no">ChartInsight LLC</span> {currentYear} &nbsp; <p className="tinytext">All data provided without any warranty because SEC XML files are imported via an automated process. Check original SEC filings before making any investment decision. </p>
                 </section>
             </div>
         </body>
