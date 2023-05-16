@@ -8,7 +8,7 @@
 import { useState, useEffect, MouseEvent, ReactNode} from 'react'
 import Link from 'next/link';
 
-import CompanyModel from '@/models/companyModel';
+import { CompanyModel } from '@/models/companyModel';
 import Sparkline from './Sparkline';
 import StockChart, {ClosingPrice} from './StockChart';
 import TabSelector from '@/components/TabSelector';

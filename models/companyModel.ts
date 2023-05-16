@@ -3,7 +3,20 @@
  * The union of these three maps are the coreTags returned by the fundamentals API.
  */
 
-const incomeStatement = new Map();
+const balanceSheet    : Map<string, string> = new Map();
+const cashFlow        : Map<string, string> = new Map();
+const coreTags        : Map<string, string> = new Map();
+const incomeStatement : Map<string, string> = new Map();
+const requiredMetrics : Map<string, string[]> = new Map();  // values are alternate tags
+
+export const CompanyModel = {
+    balanceSheet,
+    cashFlow,
+    coreTags,
+    incomeStatement,
+    requiredMetrics,
+};
+
 incomeStatement.set("SalesRevenueNet", "Revenue, Net");
 incomeStatement.set("CIRevenuePerShare", "Revenue Per Share");
 //                   ___________
@@ -41,7 +54,6 @@ incomeStatement.set("CommonStockSharesOutstanding", "Common Stock Shares Outstan
 
 // NOTE: Cash Flows are reported fiscal-year-to-date so prior quarters must be deducted from each value,
 // making the mapping process more difficult
-const cashFlow = new Map();
 cashFlow.set("DepreciationDepletionAndAmortization", "Depreciation, Depletion &amp; Amortization");
 cashFlow.set("IncreaseDecreaseInAccountsReceivable", "Change in Accounts Receiveable");
 cashFlow.set("NetCashProvidedByUsedInOperatingActivities", "Net Cash from Operations");
@@ -74,7 +86,6 @@ however each filing should have a value for one or the other.
 requiredMetrics allows identifying filings that are missing BOTH CostOfGoodsAndServicesSold and OperatingExpenses (after mapping),
 or missing BOTH EarningsPerShareBasic and EarningsPerShareDiluted.
 */
-const requiredMetrics = new Map();
 
 // Income statement values
 requiredMetrics.set("SalesRevenueNet", [] );
@@ -96,7 +107,6 @@ requiredMetrics.set("Assets", [] );
 requiredMetrics.set("Liabilities", [] );
 
 
-const balanceSheet = new Map();
 // Current assets
 // TODO: fix handling of reporting of CashAndCashEquivalents at both start and end of quarter
 balanceSheet.set("CashAndCashEquivalentsAtCarryingValue", "Cash and Cash Equivalents"); // reported twice per filing (period start and end)
@@ -125,23 +135,8 @@ balanceSheet.set("LiabilitiesNoncurrent", "Total Long-Term Liabilities");       
 balanceSheet.set("Liabilities", "Total Liabilities");
 //                ___________
 
+balanceSheet.forEach((value: string, key: string) => coreTags.set(key, value));
 
-// Merge the keys from these Maps using an Immediately-Invoked Generator Function Expression
-const coreTags = new Set( function*(){ yield* balanceSheet.keys(); yield* cashFlow.keys(); yield* incomeStatement.keys() }() );
+cashFlow.forEach((value: string, key: string) => coreTags.set(key, value));
 
-// Map version with titles for each key
-const coreTagMap = new Map([...balanceSheet, ...cashFlow, ...incomeStatement]);
-
-const CompanyModel = {
-    name: 'CompanyModel',
-    version: '1.0.0',
-    once: true,
-    balanceSheet,
-    cashFlow,
-    incomeStatement,
-    coreTags,
-    coreTagMap, // values are titles
-    requiredMetrics,
-};
-
-export default CompanyModel;
+incomeStatement.forEach((value: string, key: string) => coreTags.set(key, value));

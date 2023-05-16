@@ -1,5 +1,11 @@
 import { getMySqlConnection} from '@/models/db';
 
+export {
+    getInsiderHoldingsForFilingId,
+    getLatestFilingForCIK,
+    getOwnerByURI,
+}
+
 /**
  * Owner lookup using the lowercase URI
  * @param uri string URI excluding leading /i/ in /i/Altimeter-Capital-Management 
@@ -94,10 +100,4 @@ async function getInsiderHoldingsForFilingId(filingId: number) {
                                                 ORDER by nameOfIssuer ASC`, [filingId]);
     }
     return rows;
-}
-
-export {
-    getInsiderHoldingsForFilingId,
-    getLatestFilingForCIK,
-    getOwnerByURI,
 }

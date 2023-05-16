@@ -6,7 +6,7 @@ const MAX_STOCK_ID : number = 6000;
 
 import { NextResponse } from 'next/server';
 import { getMySqlConnection } from '@/models/db';
-import CompanyModel from '@/models/companyModel';
+import { CompanyModel } from '@/models/companyModel';
 
 export async function GET(request: Request, route: { params: { endpoint: string, stockId: string }}) {
     let data : [{}?]= [];
@@ -44,7 +44,7 @@ async function getSparklineData(stockId: number, isAdmin = false): Promise<[{}?]
     // Only use values present for the most recent 4 filings or the order will get mixed up
     for (let i = 0; i < 4 && i < rows.length; i++) {
         let r = rows[i];
-        for ([metricTag, metricLabel] of CompanyModel.coreTagMap.entries()) {
+        for ([metricTag, metricLabel] of CompanyModel.coreTags.entries()) {
             if (metricsFound.has(metricTag) === false && r[metricTag] != null) {
                 metricsFound.add(metricTag);
             }
@@ -66,7 +66,7 @@ async function getSparklineData(stockId: number, isAdmin = false): Promise<[{}?]
     }
 
     // Now filter the map to only those values present in metricsFound
-    for ([metricTag, metricLabel] of CompanyModel.coreTagMap.entries()) {
+    for ([metricTag, metricLabel] of CompanyModel.coreTags.entries()) {
         if (metricsFound.has(metricTag)) {
             metricsNN.set(metricTag, metricLabel);
         }

@@ -1,5 +1,7 @@
 import mysql, { ConnectionOptions } from 'mysql2/promise';
 
+export { getMySqlConnection, getURIList };
+
 export interface URIEntry {
     id: number;
     uri: string;
@@ -14,7 +16,7 @@ const _uriList: Map<string, URIEntry> = new Map();
  * Get a ConnectionPool to use for queries.
  * @returns a Promise<Pool> which automatically releases connections when queries resolve
  */
-export async function getMySqlConnection() {
+async function getMySqlConnection() {
     if(_pool == undefined){
         let config: ConnectionOptions = {
             host: process.env.MYSQL_HOST,
@@ -34,7 +36,7 @@ export async function getMySqlConnection() {
     return _pool;   // Pool will release connections automatically when queries finish
 }
 
-export async function getURIList() {
+async function getURIList() {
     if (_uriList.size == 0) {
         let con = await getMySqlConnection();
         const [rows] = await con.query('SELECT id, ticker, uri, shortName FROM stock WHERE hide = 0');
