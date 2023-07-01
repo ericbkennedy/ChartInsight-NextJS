@@ -24,6 +24,14 @@ export default function CompanyCharts({ stock, priceTimestamps }: { stock: any, 
             .then((metrics) => {
                 setMetricData(metrics);
             })
+            
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.ciAppHandler) {
+                // Send iOS app the ticker and company name
+                window.webkit.messageHandlers.ciAppHandler.postMessage({
+                    "ticker": stock.ticker,
+                    "name": stock.shortName,
+                });
+            }
     }, [stock.id]);
 
     if (priceTimestamps.length < 1) return <p>Loading...</p>;
